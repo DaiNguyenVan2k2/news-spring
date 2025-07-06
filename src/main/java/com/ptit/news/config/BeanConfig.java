@@ -3,7 +3,6 @@ package com.ptit.news.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -14,10 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ptit.news.repository.UserRepository;
-
-import java.io.IOException;
-import java.io.InputStream;
-import org.springframework.core.io.Resource;
 
 @Configuration
 @RequiredArgsConstructor

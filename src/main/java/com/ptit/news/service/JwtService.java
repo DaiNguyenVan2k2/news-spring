@@ -31,7 +31,7 @@ public class JwtService {
     public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails, Boolean isRemember) {
         Date dateExpiration;
         if (isRemember) {
-            dateExpiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7);
+            dateExpiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30);
         } else {
             dateExpiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
         }

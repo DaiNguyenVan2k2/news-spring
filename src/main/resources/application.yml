@@ -31,3 +31,12 @@ springdoc:
     contact:
       name: PTIT Team
       email: contact@ptit.edu.vn
+
+# Axon Framework Configuration
+axon:
+  axonserver:
+    enabled: false  # Disable AxonServer connection
+  serializer:
+    general: jackson
+    events: jackson
+    messages: jackson
