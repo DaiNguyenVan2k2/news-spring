@@ -21,9 +21,15 @@ public abstract class BaseEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "created_date")
+    private String createdDate;
+
     @LastModifiedDate
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "updated_date")
+    private String updatedDate;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;

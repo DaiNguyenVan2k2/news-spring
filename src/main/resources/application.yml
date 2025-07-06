@@ -3,7 +3,7 @@ spring:
     name: news
 
   datasource:
-    url: jdbc:mysql://localhost:3306/news-db?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh
+    url: jdbc:mysql://localhost:3306/news-db?useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,3 +15,19 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+
+# Cấu hình Swagger/OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  info:
+    title: News API
+    description: API documentation for News application
+    version: 1.0.0
+    contact:
+      name: PTIT Team
+      email: contact@ptit.edu.vn
