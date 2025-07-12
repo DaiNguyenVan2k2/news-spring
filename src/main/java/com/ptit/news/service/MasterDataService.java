@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
+import com.ptit.news.repository.CategoryRepository;
+import com.ptit.news.entity.Category;
 
 @Slf4j
 @Service
@@ -27,10 +29,14 @@ public class MasterDataService implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
     public void run(String... args) throws Exception {
         initializeRoles();
         initializeUsers();
+        initializeCategories();
     }
 
     /**
@@ -144,6 +150,28 @@ public class MasterDataService implements CommandLineRunner {
         }
 
         log.info("Default users initialization completed!");
+    }
+
+    /**
+     * Khởi tạo category mẫu tiếng Việt
+     */
+    private void initializeCategories() {
+        log.info("Starting to initialize default categories...");
+        String[] categories = {
+                "Thời sự", "Thể thao", "Kinh tế", "Giải trí", "Giáo dục",
+                "Công nghệ", "Sức khỏe", "Du lịch", "Pháp luật", "Văn hóa"
+        };
+        for (String cat : categories) {
+            if (!categoryRepository.existsByContent(cat)) {
+                Category category = new Category();
+                category.setContent(cat);
+                categoryRepository.save(category);
+                log.info("Created category: {}", cat);
+            } else {
+                log.info("Category already exists: {}", cat);
+            }
+        }
+        log.info("Default categories initialization completed!");
     }
 
     /**

@@ -31,6 +31,4 @@ public abstract class BaseEntity {
     @Column(name = "updated_date")
     private String updatedDate;
 
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
 }

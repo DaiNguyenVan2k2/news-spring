@@ -69,9 +69,11 @@ public class SignInCommandHandler {
             return Response.Success(authResponse, "Đăng nhập thành công");
 
         } catch (BadCredentialsException e) {
+            System.out.println("Chạy được vào breaking 1");
             throw e;
         } catch (Exception e) {
             log.error("Error during sign in: {}", e.getMessage(), e);
+            System.out.println("Chạy được vào breaking 2");
             throw new BadCredentialsException("Lỗi khi đăng nhập");
         }
     }

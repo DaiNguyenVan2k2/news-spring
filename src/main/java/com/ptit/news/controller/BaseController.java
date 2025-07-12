@@ -28,7 +28,7 @@ public abstract class BaseController {
             return (Response<T>) commandGateway.sendAndWait(command);
         } catch (Exception e) {
             log.error("Error executing command: {}", command.getClass().getSimpleName(), e);
-            return Response.Error("Lỗi khi thực hiện thao tác");
+            throw e;
         }
     }
 

@@ -40,3 +40,7 @@ axon:
     general: jackson
     events: jackson
     messages: jackson
+
+
+server: 
+  port: 6969
