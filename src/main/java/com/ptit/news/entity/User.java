@@ -46,7 +46,10 @@ public class User extends BaseEntity implements UserDetails {
     @Transactional
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> authorities = new HashSet<>();
-        this.roles.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
+        if (this.roles != null){
+            this.roles.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
+        }
+        
         return authorities;
     }
 
