@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
+import java.time.LocalDateTime;
+import java.util.Date;
 import com.ptit.news.repository.CategoryRepository;
 import com.ptit.news.entity.Category;
 
@@ -69,8 +71,8 @@ public class MasterDataService implements CommandLineRunner {
         log.info("Starting to initialize default users...");
 
         // Tài khoản 1: reader@gmail.com - chỉ có quyền READER
-        if (!userRepository.findByEmail("reader@gmail.com").isPresent()) {
-            Role readerRole = roleRepository.findByName("READER").orElse(null);
+        if (userRepository.findByEmailAndIsDeletedFalse("reader@gmail.com").isEmpty()) {
+            Role readerRole = roleRepository.findByName(UserRole.READER.getValue()).orElse(null);
             if (readerRole != null) {
                 Set<Role> readerRoles = new HashSet<>();
                 readerRoles.add(readerRole);
@@ -80,9 +82,14 @@ public class MasterDataService implements CommandLineRunner {
                         .password(passwordEncoder.encode("123456"))
                         .firstName("Reader")
                         .lastName("User")
+                        .dateOfBirth(new Date())
                         .isEnabled(true)
+                        .phone("111222333")
+                        .avatar("reader_avatar.png")
                         .roles(readerRoles)
                         .build();
+                readerUser.setIsDeleted(false); // Sửa lỗi: Gán isDeleted bằng setter
+                readerUser.setCreatedAt(LocalDateTime.now()); // Sửa lỗi: Gán createdAt bằng setter
 
                 userRepository.save(readerUser);
                 log.info("Created reader user: reader@gmail.com");
@@ -94,9 +101,9 @@ public class MasterDataService implements CommandLineRunner {
         }
 
         // Tài khoản 2: writer@gmail.com - có quyền READER và WRITER
-        if (!userRepository.findByEmail("writer@gmail.com").isPresent()) {
-            Role readerRole = roleRepository.findByName("READER").orElse(null);
-            Role writerRole = roleRepository.findByName("WRITER").orElse(null);
+        if (userRepository.findByEmailAndIsDeletedFalse("writer@gmail.com").isEmpty()) {
+            Role readerRole = roleRepository.findByName(UserRole.READER.getValue()).orElse(null);
+            Role writerRole = roleRepository.findByName(UserRole.WRITER.getValue()).orElse(null);
 
             if (readerRole != null && writerRole != null) {
                 Set<Role> writerRoles = new HashSet<>();
@@ -108,9 +115,14 @@ public class MasterDataService implements CommandLineRunner {
                         .password(passwordEncoder.encode("123456"))
                         .firstName("Writer")
                         .lastName("User")
+                        .dateOfBirth(new Date())
                         .isEnabled(true)
+                        .phone("444555666")
+                        .avatar("writer_avatar.png")
                         .roles(writerRoles)
                         .build();
+                writerUser.setIsDeleted(false); // Sửa lỗi: Gán isDeleted bằng setter
+                writerUser.setCreatedAt(LocalDateTime.now()); // Sửa lỗi: Gán createdAt bằng setter
 
                 userRepository.save(writerUser);
                 log.info("Created writer user: writer@gmail.com");
@@ -122,9 +134,9 @@ public class MasterDataService implements CommandLineRunner {
         }
 
         // Tài khoản 3: admin@gmail.com - có quyền READER và ADMIN
-        if (!userRepository.findByEmail("admin@gmail.com").isPresent()) {
-            Role readerRole = roleRepository.findByName("READER").orElse(null);
-            Role adminRole = roleRepository.findByName("ADMIN").orElse(null);
+        if (userRepository.findByEmailAndIsDeletedFalse("admin@gmail.com").isEmpty()) {
+            Role readerRole = roleRepository.findByName(UserRole.READER.getValue()).orElse(null);
+            Role adminRole = roleRepository.findByName(UserRole.ADMIN.getValue()).orElse(null);
 
             if (readerRole != null && adminRole != null) {
                 Set<Role> adminRoles = new HashSet<>();
@@ -136,9 +148,14 @@ public class MasterDataService implements CommandLineRunner {
                         .password(passwordEncoder.encode("123456"))
                         .firstName("Admin")
                         .lastName("User")
+                        .dateOfBirth(new Date())
                         .isEnabled(true)
+                        .phone("777888999")
+                        .avatar("admin_avatar.png")
                         .roles(adminRoles)
                         .build();
+                adminUser.setIsDeleted(false); // Sửa lỗi: Gán isDeleted bằng setter
+                adminUser.setCreatedAt(LocalDateTime.now()); // Sửa lỗi: Gán createdAt bằng setter
 
                 userRepository.save(adminUser);
                 log.info("Created admin user: admin@gmail.com");
@@ -162,9 +179,12 @@ public class MasterDataService implements CommandLineRunner {
                 "Công nghệ", "Sức khỏe", "Du lịch", "Pháp luật", "Văn hóa"
         };
         for (String cat : categories) {
-            if (!categoryRepository.existsByContent(cat)) {
+            if (!categoryRepository.existsByContentAndIsDeletedFalse(cat)) {
                 Category category = new Category();
                 category.setContent(cat);
+                category.setParent(null);
+                category.setIsDeleted(false);
+                category.setCreatedAt(LocalDateTime.now());
                 categoryRepository.save(category);
                 log.info("Created category: {}", cat);
             } else {

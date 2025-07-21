@@ -21,7 +21,8 @@ public class BeanConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return email -> userRepository.findByEmail(email)
+        // Sửa lỗi: Thay findByEmail bằng findByEmailAndIsDeletedFalse
+        return email -> userRepository.findByEmailAndIsDeletedFalse(email)
                 .orElseThrow(() -> new UsernameNotFoundException("not found user!"));
     }
 
