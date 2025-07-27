@@ -1,15 +1,13 @@
 package com.ptit.news.entity;
 
+import com.ptit.news.common.enums.RequestAuthorStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -21,5 +19,7 @@ public class RequestAuthor extends BaseEntity {
     private String profileUrl;
     private String sampleArticles;
     private String reason;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private RequestAuthorStatus status;
 }
