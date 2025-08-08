@@ -17,8 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin/categories")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true") // Đảm bảo CORS cho frontend của bạn
-public class AdminCategoryController extends AdvancedBaseController { // Kế thừa nếu bạn có AdvancedBaseController
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+public class AdminCategoryController extends AdvancedBaseController {
 
     private final AdminCategoryService adminCategoryService;
 
@@ -54,6 +54,15 @@ public class AdminCategoryController extends AdvancedBaseController { // Kế th
     public ResponseEntity<Response<Void>> deleteCategory(@PathVariable Long id) {
         log.info("Deleting category with ID: {}", id);
         adminCategoryService.deleteCategory(id);
-        return success(null, "Category deleted successfully", HttpStatus.NO_CONTENT); // 204 No Content
+        // Trả về 204 No Content cho thao tác xóa thành công không cần body
+        return success(null, "Category soft-deleted successfully", HttpStatus.NO_CONTENT);
+    }
+
+    // Endpoint MỚI để khôi phục thể loại đã xóa mềm
+    @PutMapping("/{id}/restore")
+    public ResponseEntity<Response<CategoryDTO>> restoreCategory(@PathVariable Long id) {
+        log.info("Restoring category with ID: {}", id);
+        CategoryDTO restoredCategory = adminCategoryService.restoreCategory(id);
+        return success(restoredCategory, "Category restored successfully", HttpStatus.OK);
     }
 }

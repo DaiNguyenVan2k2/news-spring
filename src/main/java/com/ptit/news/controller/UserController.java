@@ -1,5 +1,9 @@
 package com.ptit.news.controller;
 
+import com.ptit.news.command.dto.RequestAuthorCommand;
+import com.ptit.news.dto.RequestAuthorResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.ptit.news.query.dto.GetUserByIdQuery;
 import com.ptit.news.command.dto.UpdateUserCommand;
@@ -11,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
-public class UserController extends BaseController {
+public class UserController extends AdvancedBaseController {
 
     @GetMapping("/{id}")
     public Response<User> getUserById(@PathVariable Long id) {
@@ -26,5 +30,10 @@ public class UserController extends BaseController {
         // Set the ID from path variable
         command.setId(id);
         return executeCommand(command);
+    }
+
+    @PostMapping("/request-author")
+    public ResponseEntity<Response<RequestAuthorResponse>> requestAuthor(@RequestBody RequestAuthorCommand command) {
+        return executeCommandWithCustomStatus(command, HttpStatus.CREATED);
     }
 }

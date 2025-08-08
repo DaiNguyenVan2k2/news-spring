@@ -7,28 +7,34 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.time.LocalDateTime; // Đảm bảo đã import LocalDateTime
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
 
+    List<News> findByStatus(Boolean status);
+
+// Phương thức này đã được sửa lỗi từ các lần trước
+    List<News> findByStatusAndIsDeleted(Boolean status, boolean isDeleted);
     Page<News> findAllByIsDeletedFalse(Pageable pageable);
+
     Optional<News> findByIdAndIsDeletedFalse(Long id);
+
+// Phương thức MỚI: Tìm kiếm bài viết theo tiêu đề (không phân biệt chữ hoa/thường)
+
+// và đảm bảo bài viết chưa bị xóa mềm, có phân trang.
+
+    Page<News> findByTitleContainingIgnoreCaseAndIsDeletedFalse(String title, Pageable pageable); // <-- Thêm dòng này
 
     @Query("SELECT new com.ptit.news.dto.NewsViewDTO(n.id, n.title, n.views) " +
             "FROM News n " +
             "WHERE n.isDeleted = false " +
             "ORDER BY n.views DESC")
     List<NewsViewDTO> findTopNewsByViews();
-
-    // --- Các phương thức mới cho Dashboard ---
-
-    // Đếm tổng số bài viết không bị xóa
     long countByIsDeletedFalse();
 
-    // Đếm số bài viết được tạo sau một thời điểm nhất định và không bị xóa
     long countByCreatedAtAfterAndIsDeletedFalse(LocalDateTime createdAt);
+
 }

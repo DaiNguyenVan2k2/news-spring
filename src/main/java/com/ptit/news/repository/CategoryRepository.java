@@ -23,4 +23,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     // Tìm category theo ID và không bị xóa
     Optional<Category> findByIdAndIsDeletedFalse(Long id);
+
+    // Phương thức MỚI: Tìm category theo ID và ĐÃ BỊ XÓA MỀM (cần cho chức năng khôi phục)
+    Optional<Category> findByIdAndIsDeletedTrue(Long id); // <-- Đã thêm dòng này
 }

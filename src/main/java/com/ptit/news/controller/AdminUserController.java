@@ -22,11 +22,13 @@ public class AdminUserController {
     public ResponseEntity<Page<UserDTO>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) {
+            @RequestParam(defaultValue = "id,asc") String[] sort,
+            @RequestParam(required = false) String searchTerm) { // <-- Thêm tham số searchTerm
 
         Sort sorting = Sort.by(Sort.Direction.fromString(sort[1]), sort[0]);
         Pageable pageable = PageRequest.of(page, size, sorting);
-        Page<UserDTO> users = adminUserService.getAllUsers(pageable);
+        // Truyền searchTerm vào service
+        Page<UserDTO> users = adminUserService.getAllUsers(searchTerm, pageable); // <-- Truyền searchTerm
         return ResponseEntity.ok(users);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder; // Cần thêm PasswordEncoder
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils; // <-- Thêm import này
 
 import java.util.HashSet;
 import java.util.Set;
@@ -80,9 +81,17 @@ public class AdminUserService {
         return user;
     }
 
-
-    public Page<UserDTO> getAllUsers(Pageable pageable) {
-        Page<User> userPage = userRepository.findAllByIsDeletedFalse(pageable);
+    // Đã sửa đổi phương thức này để chấp nhận searchTerm
+    public Page<UserDTO> getAllUsers(String searchTerm, Pageable pageable) { // <-- Thêm tham số searchTerm
+        Page<User> userPage;
+        if (StringUtils.hasText(searchTerm)) {
+            // Nếu có searchTerm, tìm kiếm theo email, firstName, hoặc lastName và chưa bị xóa mềm
+            userPage = userRepository.findByEmailContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseAndIsDeletedFalse(
+                    searchTerm, searchTerm, searchTerm, pageable);
+        } else {
+            // Nếu không có searchTerm, lấy tất cả người dùng chưa bị xóa mềm
+            userPage = userRepository.findAllByIsDeletedFalse(pageable);
+        }
         return userPage.map(this::convertToDto);
     }
 
