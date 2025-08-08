@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime; // Đảm bảo đã import LocalDateTime
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +18,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmailAndIsDeletedFalse(String email);
     Optional<User> findByEmail(String email);
     Page<User> findAllByIsDeletedFalse(Pageable pageable);
+
+    // Phương thức MỚI: Tìm kiếm người dùng theo email, firstName, hoặc lastName
+    // và đảm bảo người dùng chưa bị xóa mềm.
+    // Sử dụng 'ContainingIgnoreCase' để tìm kiếm không phân biệt chữ hoa/thường
+    // và 'AndIsDeletedFalse' để lọc người dùng chưa bị xóa mềm.
+    Page<User> findByEmailContainingIgnoreCaseOrFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseAndIsDeletedFalse(
+            String email, String firstName, String lastName, Pageable pageable); // <-- Thêm dòng này
 
     @Query("SELECT new com.ptit.news.dto.AuthorRevenueDTO(u.id, u.email, u.firstName, u.lastName, SUM(p.amount)) " +
             "FROM User u JOIN Payment p ON p.author.id = u.id " +

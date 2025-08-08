@@ -103,14 +103,14 @@ public class MasterDataService implements CommandLineRunner {
         // Tài khoản 2: writer@gmail.com - có quyền READER và WRITER
         if (userRepository.findByEmailAndIsDeletedFalse("writer@gmail.com").isEmpty()) {
             Role readerRole = roleRepository.findByName(UserRole.READER.getValue()).orElse(null);
-            Role writerRole = roleRepository.findByName(UserRole.WRITER.getValue()).orElse(null);
+            Role authorRole = roleRepository.findByName(UserRole.AUTHOR.getValue()).orElse(null);
 
-            if (readerRole != null && writerRole != null) {
-                Set<Role> writerRoles = new HashSet<>();
-                writerRoles.add(readerRole);
-                writerRoles.add(writerRole);
+            if (readerRole != null && authorRole != null) {
+                Set<Role> authorRoles = new HashSet<>();
+                authorRoles.add(readerRole);
+                authorRoles.add(authorRole);
 
-                User writerUser = User.builder()
+                User authorUser = User.builder()
                         .email("writer@gmail.com")
                         .password(passwordEncoder.encode("123456"))
                         .firstName("Writer")
@@ -119,12 +119,12 @@ public class MasterDataService implements CommandLineRunner {
                         .isEnabled(true)
                         .phone("444555666")
                         .avatar("writer_avatar.png")
-                        .roles(writerRoles)
+                        .roles(authorRoles)
                         .build();
-                writerUser.setIsDeleted(false); // Sửa lỗi: Gán isDeleted bằng setter
-                writerUser.setCreatedAt(LocalDateTime.now()); // Sửa lỗi: Gán createdAt bằng setter
+                authorUser.setIsDeleted(false); // Sửa lỗi: Gán isDeleted bằng setter
+                authorUser.setCreatedAt(LocalDateTime.now()); // Sửa lỗi: Gán createdAt bằng setter
 
-                userRepository.save(writerUser);
+                userRepository.save(authorUser);
                 log.info("Created writer user: writer@gmail.com");
             } else {
                 log.error("Required roles not found, cannot create writer user");
@@ -134,7 +134,7 @@ public class MasterDataService implements CommandLineRunner {
         }
 
         // Tài khoản 3: admin@gmail.com - có quyền READER và ADMIN
-        if (userRepository.findByEmailAndIsDeletedFalse("admin@gmail.com").isEmpty()) {
+        if (userRepository.findByEmailAndIsDeletedFalse("admin1@gmail.com").isEmpty()) {
             Role readerRole = roleRepository.findByName(UserRole.READER.getValue()).orElse(null);
             Role adminRole = roleRepository.findByName(UserRole.ADMIN.getValue()).orElse(null);
 
@@ -144,7 +144,7 @@ public class MasterDataService implements CommandLineRunner {
                 adminRoles.add(adminRole);
 
                 User adminUser = User.builder()
-                        .email("admin@gmail.com")
+                        .email("admin1@gmail.com")
                         .password(passwordEncoder.encode("123456"))
                         .firstName("Admin")
                         .lastName("User")
